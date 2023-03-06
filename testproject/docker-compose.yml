@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  testproject:
+    image: ${DOCKER_REGISTRY-}testproject
+    build:
+      context: .
+      dockerfile: testproject/Dockerfile
