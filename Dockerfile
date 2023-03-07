@@ -19,4 +19,12 @@ RUN dotnet publish "testproject.csproj" -c Release -o /app/publish /p:UseAppHost
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN addgroup --group friendlygroupname --gid 2000 \
+&& adduser \    
+    --uid 1000 \
+    --gid 2000 \
+    "friendlyusername" 
+
+RUN chown friendlyusername:friendlygroupname  /app /tmp
+USER friendlyusername:friendlygroupname 
 ENTRYPOINT ["dotnet", "testproject.dll"]
