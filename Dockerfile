@@ -15,19 +15,11 @@ WORKDIR "/src/testproject"
 RUN dotnet build "testproject.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "testproject.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN echo "Creating development certifiate......"
+RUN dotnet dev-certs https
+RUN dotnet publish "testproject.csproj" -c Release -o /app/publish /p:UseAppHost=false^M
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN addgroup --group friendlygroupname --gid 2000 \
-&& adduser \    
-    --uid 1000 \
-    --gid 2000 \
-    "friendlyusername" 
-
-RUN echo "Creating development certifiate......"
-RUN dotnet dev-certs https
-RUN chown friendlyusername:friendlygroupname  /app /tmp
-USER friendlyusername:friendlygroupname 
 ENTRYPOINT ["dotnet", "testproject.dll"]
