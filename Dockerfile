@@ -26,6 +26,7 @@ RUN addgroup --group friendlygroupname --gid 2000 \
     --gid 2000 \
     "friendlyusername" 
 
+RUN dotnet dev-certs https
 RUN chown friendlyusername:friendlygroupname  /app /tmp
 USER friendlyusername:friendlygroupname 
 ENTRYPOINT ["dotnet", "testproject.dll"]
